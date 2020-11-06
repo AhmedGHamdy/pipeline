@@ -1,33 +1,24 @@
-pipeline {
-     agent any
-     stages {
-         stage('Build') {
+
+pipeline { 
+   agent any 
+      stages { 
+	  stage('Lint HTML') { 
              steps {
-                 sh 'echo "Hello World"'
-                 sh '''
-                     echo "Multiline shell steps works too"
-                     ls -lah
-                 '''
-             }
-         }
-         stage('Lint HTML') {
-              steps {
-                  sh 'tidy -q -e *.html'
-              }
-         }
-         stage('Security Scan') {
-              steps { 
-                 aquaMicroscanner imageName: 'alpine:latest', notCompleted: 'exit 1', onDisallowed: 'fail'
-              }
-         }         
-         stage('Upload to AWS') {
-              steps {
-                  withAWS(region:'us-east-2',credentials:'UdacityCICD-at-992205692545') {
-                  sh 'echo "Uploading content with AWS creds"'
-                      s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'index.html', bucket:'udacityproject2s3
-')
-                  }
-              }
-         }
-     }
+		 sh 'tidy -q -e *.html'    
+	     }
+	  }
+	  stage('UploadToAWS') { 
+             steps { 
+		     sh 'echo "Hello World"'
+		     sh 'pwd'
+		     sh '''
+		       echo "Multiline steps test"
+		       ls -lah
+		     '''
+		     withAWS(credentials: 'aws-static') {
+                         s3Upload bucket: 'udacityproject2s3', includePathPattern: "*.html", workingDir: '.'
+                    }
+	     } 
+	  } 
+      } 
 }
