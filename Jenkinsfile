@@ -27,7 +27,8 @@ pipeline {
                                       passwordVariable: 'rehab@0696')]) {
                   withAWS(region:'us-east-2') {
                   sh 'echo "Uploading content with AWS creds"'
-                      s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'index.html', bucket:'static-jenkins-pipeline')
+                      s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'index.html', bucket:'udacityproject2s3
+')
                   }
               }
          }
